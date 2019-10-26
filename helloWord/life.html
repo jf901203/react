@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.js"></script>
+  <script src="../js/babel.min.js"></script>
+</head>
+<body>
+  <div id="demo"></div>
+  <script type="text/babel">
+   
+  //创建组件对象 React操作的是虚拟DOM
+  class Life extends React.Component{
+    // 构造器钩子
+    constructor(props){
+      super(props)
+      this.state={
+        opacity:1
+      }
+      this.destroyComponent=this.destroyComponent.bind(this)
+    }
+
+    destroyComponent(){
+      ReactDOM.unmountComponentAtNode(document.getElementById('demo'))
+    }
+  // 组件挂载之后调用的钩子
+    componentDidMount() {
+      this.tervalId=setInterval(function(){
+        let {opacity}=this.state
+        opacity -= 0.1
+        if(opacity<=0){
+          opacity=1
+        }
+        this.setState({
+          opacity
+        })
+        console.log('ss')
+      }.bind(this), 200);
+      
+      }
+    //  组件销毁之前被调用的钩子
+      componentWillUnmount(){
+        clearInterval(this.tervalId)
+      }
+
+    // 创建虚拟DOM React操作的也是虚拟DOM 渲染钩子
+    render(){
+      const {opacity}=this.state
+      return (
+       <div>
+         <h2 style={{opacity:opacity}}>{this.props.msg}</h2>
+         <button onClick={this.destroyComponent}>我太难了</button>
+       </div>
+      )
+    }
+  }
+
+  //渲染组件对象 将虚拟DOM塞进去DOM容器中称为挂载
+  ReactDOM.render(<Life msg="太难了"/>,document.getElementById('demo'))
+  </script>
+
+</body>
+</html>

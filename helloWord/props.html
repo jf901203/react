@@ -25,8 +25,10 @@
       this.state={
         isShow:false
       }
-
+      // 让this强制指定为组件对象
+     this.hander=this.hander.bind(this)
      }
+    //  新添加的方法：内部的this默认不是组件对象 而是undefind
      hander(){
       // 得到状态并取反
       const isShow=!this.state.isShow

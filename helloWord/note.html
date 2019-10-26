@@ -1,0 +1,259 @@
+
+2.React 面向组件编程
+
+js是面向对象的编程
+
+基本理解和使用
+
+工厂函数组件(简单组件) 没有状态的组件
+//创建组件
+function App(){
+ return <h1>saas</h1> 
+}
+
+//渲染组件
+
+ReactDOM.render(<App/>,document.getElementById('demo'))
+
+ES6类组件(复杂组件)
+//从React类上继承类
+
+class App extends React.Component{
+  //实例创建时 会自动调用构造函数
+  constructor(props){
+    super(props) =>调用父类的构造函数
+    this.state={
+      todo:{}
+    }
+
+    this.handleClik=this.handleClik.bind(this)
+
+  }
+
+  constructor构造器函数可以初始化状态和绑定事件
+
+  构造函数是唯一可以给this.state对象赋值的地方
+ 
+//新添加的方法 内部的this不是当前组件对象
+handleClik(){}
+
+ //重写渲染方法
+  render(){
+
+    return (<div>
+      <h1></h1>
+    </div>)
+  }
+}
+
+//渲染组件
+ReactDOM.render(<App/>,document.getElementById('demo'))
+
+
+
+ //创建组件类
+ class App extends React.Component{
+  constructor(props){
+    super(props)
+    // 初始换状态数据
+    this.state={
+      todos:[]
+    }
+  }
+
+  //只能有一个根标签 创建虚拟dom
+  render(){
+    return (
+      <div>
+       <h1>Simple Tode List</h1>
+       <Add/>
+       <List/>
+      </div>
+    )
+  }
+}
+
+//渲染组件
+ReactDOM.render(<App />,document.getElementById('demo'))
+  
+
+
+组件的三大属性
+
+this.state
+this.props
+this.refs与事件处理
+
+state是组件对象最重要的属性，值是对象(可以包含多个数据)
+组件被称为"状态机"，通过更新组件的state来更新对应的页面显示(重新渲染组件)
+
+
+state的编码操作 
+
+初始化状态 
+
+读取状态 
+
+更新状态 组件自身的状态(数据)
+
+初始化状态：
+
+constructor(props){
+super(props)
+this.state={
+  key:val,
+  key1:val1,
+  key2:[]
+}
+
+}
+
+读取某个状态(在rende方法中读取状态)
+
+this.state.key
+
+更新状态(重新设置一个对象)===>组件界面更新(在事件回调函数中更新状态)
+
+this.setState({
+  key:newVal,
+  key1:newVal1
+})
+
+props 组件没有自身的状态但是要显示数据 只能通过props传递 props是外来的数据
+
+props 可以接收一般数据 也可以接收函数名 (函数也是一种数据) 函数名是对函数对象的一种引用
+
+读取props状态
+
+在工厂函数组件的render(){} 函数中读取 props.key
+
+在类组件中读取的render(){}函数中读取 this.props.key
+
+理解
+
+每个组件对象都会有props(properties的简写)
+
+组件标签的所有属性都保存在props对象中
+
+作用
+
+通过标签属性从组件外向组件内传递变化的数据
+注意：组件内部不要修改props数据
+
+编码操作
+
+内部读取某个属性值
+this.props.key
+
+给组件类执行属性类型  对props中的属性值进行类型限制和必要性限制
+对外来的数据进行类型和必要性的限制
+
+Person.propTypes={
+  name:React.PropTypes.string.isRequired,
+  arr:React.PropTypes.array.isRequied
+}
+
+扩展性：将对象的所有属性通过props传递
+
+<Person {...person}>
+
+给类组件设置默认值 传入的属性
+
+Person.defaultProps={
+  name:'Tom'
+}
+
+组件类的构造函数
+
+constructor(props){
+  super(props)
+  console.log(props)
+}
+
+
+refs 标识组件的唯一
+
+ref={(div)=>this.contnet=div} ===>this.contnet 得到DOM元素
+
+ref="content" ===>this.refs.content 得到DOM元素
+
+
+
+5.2 功能界面的组件化编码流程(无比重要)
+
+拆分组件：拆分界面 抽取组件
+实现静态组件：使用组件实现静态页面效果
+实现动态组件： 
+              动态显示初始化数据 
+              交互功能(从绑定事件监听开始)
+
+数据保存在哪个组件内？
+看数据是某个组件需要(给组件自己)，还是某些组件需要(给共同的父组件)     
+
+需要在子组件中改变父组件的状态
+
+子组件不能直接改变符组件的状态
+状态在哪个组件更新状态的行为就应该在哪个组件
+在父组件定义函数修改状态 将函数传递给子组件 子组件调用函数
+
+
+行为就是函数 函数也是数据可以传递 传递的函数名只是函数在内存中的标识符 是一种引用
+通过标识符就能找到函数
+
+更新状态不能直接更新 必须调用this.setState()方法 才能更新状态
+
+组件并没有继承关系 只是位置关系 是一种嵌套关系
+<App>
+  <WelCome></WelCome>
+</App>
+
+App组件是WelCome组件的父组件 
+
+WelCome组件是App组件的子组件
+
+Cannot read property 'todos' of undefined ：意思是在undefined对象上读取todos属性
+
+组件化：当应用以多组件的方式实现，这个应用就是一个组件化的应用
+
+模块化：当应用的js都是以模块来编写，这个应用就是一个模块化的应用
+
+组件：用来实现特定功能效果的代码集合
+
+模块：向外提供特定功能的程序 一般就是一个js文件
+
+
+组件化编写功能的流程
+
+拆分组件
+
+实现静态组件(没有动态数据 没有交互 只有静态界面) 每一个组件都有一个render函数
+
+实现动态组件：1、实现初始化数据动态显示
+             2、实现交互功能(绑定事件监听 更新状态)
+
+6 在组件中收集表单数据
+
+   form表单事件绑定有两种做法
+
+   1、给具体表单元素添加点击的监听
+   2、给form添加监听submit
+
+在react应用中 如何收集表单输入的数据
+
+包含表单的组件分类
+
+受控组件：表单项输入数据能自动收集成状态 自动收集数据 必须要加onChenge监听 在输入的过程中已经收集好了
+
+非受控组件：需要时才手动读取表单输入框中的数据
+
+
+React中的事件都是自定义的 没有用原生DOM的事件
+
+onClick
+onSubmit
+onChange
+onInput
+onFocus
+onBlur
+
+组件的生命周期

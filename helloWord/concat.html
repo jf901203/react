@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.6.0/prop-types.js"></script>
+  <script src="../js/babel.min.js"></script>
+
+</head>
+<body>
+  <div id="demo"></div>
+
+  <script type="text/babel">
+    
+    // 拆分组件 定义组件
+    // 数据保存在哪个组件 
+    // 看数据是某个组件需要(给它自己)，还是某些组件需要(给共同的父组件)
+    class App extends React.Component{
+      constructor(props){
+        super(props)
+        // 初始换状态数据
+        this.state={
+          todos:['吃饭','睡觉','钓鱼','游戏']
+        }
+        // (只要是自己定义的函数都必须要强制绑定this)
+        this.addTodo=this.addTodo.bind(this)
+      }
+      // 新增的函数(只要是自己定义的函数都必须要强制绑定this)
+      addTodo(todo){
+       const {todos}= this.state
+       todos.unshift(todo)
+       this.setState({
+        todos
+       })
+
+      }
+
+      // 只能有一个根标签
+      //  todos这个属性会保存在props对象中
+      // 函数就有函数作用域 当前函数作用域addTodo没有这个函数 就向上层作用域找 this.addTodo
+      render(){
+        const {todos}=this.state
+        return (
+          <div>
+           <h1>Simple Tode List</h1>
+           <Add count={todos.length} addTodo={this.addTodo}/>
+           <List todos={todos}/>
+          </div>
+        )
+      }
+    }
+    // add组件
+    class Add extends React.Component{
+      // 初始化数据和事件
+      constructor(props){
+        super(props)
+        this.handleAdd=this.handleAdd.bind(this)
+      }
+      // 定义的新函数 必须指定函数内部的this指向 
+      handleAdd(){
+        const todo=this.container.value.trim()
+        if(!todo){
+          return
+        }
+        this.props.addTodo(todo)
+        this.container.value=''
+      }
+      render(){
+      
+         const {count}=this.props
+        return (
+          <div>
+           <input type="text" ref={input=>this.container=input}/>
+           <button onClick={this.handleAdd}>添加{count}</button>
+          </div>
+        )
+      }
+    }
+    Add.propTypes={
+      // count给这个属性限制类型和必要性
+      count:PropTypes.number.isRequired,
+      // addTodo给这个属性限制类型和必要性
+      addTodo:PropTypes.PropTypes.func.isRequired
+    }
+    class List extends React.Component{
+      render(){
+        // 对象的解构赋值
+        const {todos} = this.props
+        
+        return (
+          <div>
+          
+           <ul>
+             {
+              //  动态显示初始化数据
+               todos.map((item,index)=><li key={index}>{item}</li>)
+             }
+           </ul>
+          </div>
+        )
+      }
+    }
+  // List组件类 属性设置 指定的属性和类型 
+    List.propTypes={
+      todos:PropTypes.array.isRequired
+    }
+
+  ReactDOM.render(<App />,document.getElementById('demo'))
+  
+  </script>
+</body>
+</html>
