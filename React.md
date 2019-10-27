@@ -1,4 +1,10 @@
 
+
+git pull 拉取代码
+git add -A 提交所有变化（包括删除、新增、修改） 
+git commit -m "注释" 本地仓库提交
+git push origin master 推送
+
 ## React 面向组件编程
 
 js是面向对象的编程
